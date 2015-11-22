@@ -38,25 +38,10 @@ func {{ .FuncName }}(str string) bool {
 `))
 
 func generate(pkg_name, func_name string, st *state) {
-	marked := map[int]bool{}
-	states := []*state{}
-	var traverse func(*state)
-	traverse = func(s *state) {
-		if marked[s.Id] {
-			return
-		}
-		states = append(states, s)
-		marked[s.Id] = true
-		for _, edg := range s.OutBounds {
-			traverse(edg.State)
-		}
-	}
-	traverse(st)
-
 	err := templateFile.Execute(os.Stdout, map[string]interface{}{
 		"PackageName": pkg_name,
 		"FuncName":    func_name,
-		"States":      states,
+		"States":      allStates(st),
 	})
 	if err != nil {
 		panic(err)
