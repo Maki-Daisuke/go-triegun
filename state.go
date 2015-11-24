@@ -33,5 +33,22 @@ func addString(st *state, str string) {
 	}
 	next := newState()
 	addString(next, str[1:])
-	st.OutBounds = append(st.OutBounds, edge{Key: str[0:1], State: next})
+	st.addOutbound(str[0:1], next)
+}
+
+func (st *state) addOutbound(key string, next *state) {
+	st.OutBounds = append(st.OutBounds, edge{Key: key, State: next})
+}
+
+func (st *state) getNextByKey(k string) *state {
+	for _, edg := range st.OutBounds {
+		if edg.Key == k {
+			return edg.State
+		}
+	}
+	return nil
+}
+
+func (st *state) HasOutboundKey(k string) bool {
+	return st.getNextByKey(k) != nil
 }
