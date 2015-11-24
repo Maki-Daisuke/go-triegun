@@ -25,4 +25,7 @@ func TestGenerate(t *testing.T) {
 	if MatchUA(`com.apple.geodd`) {
 		t.Error(`should not match against "com.apple.geodd", but did`)
 	}
+	if MatchUA(`Apple`) {
+		t.Error(`should not match against "Apple", but did`)
+	}
 }

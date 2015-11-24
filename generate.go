@@ -17,6 +17,11 @@ import (
 )
 
 func {{ .FuncName }}(str string) bool {
+  defer func(){
+    recover() // Must be "index out of range" error for string.
+              // Ignore and return false.
+  }()
+
   goto STATE_{{ with index .States 0 }}{{ .Id }}{{ end }}
 {{ range .States }}
   STATE_{{ .Id }}:
