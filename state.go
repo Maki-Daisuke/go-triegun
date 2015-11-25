@@ -21,18 +21,18 @@ func newState() *state {
 func initMap(inputs []string) *state {
 	start_s := newState()
 	for _, str := range inputs {
-		addString(start_s, str)
+		start_s.addString(str)
 	}
 	return start_s
 }
 
-func addString(st *state, str string) {
+func (st *state) addString(str string) {
 	for len(str) == 0 {
 		st.IsGoal = true
 		return
 	}
 	next := newState()
-	addString(next, str[1:])
+	next.addString(str[1:])
 	st.addOutbound(str[0:1], next)
 }
 
