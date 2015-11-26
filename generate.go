@@ -24,8 +24,22 @@ func Match{{ .TagName }}(bytes []byte) bool {
 
   i := 0
 
-{{ $start := index .States 0 }}
-  goto STATE_{{ $start.Id }}
+{{ $start := .Start }}
+  STATE_{{ $start.Id }}:
+{{ if .IsGoal }}
+    return true
+{{ else }}
+    switch bytes[i] {
+  {{ range $key, $next := $start.Nexts }}
+    case {{ printf "%q" $key }}:
+      i++
+      goto STATE_{{ $next.Id }}
+  {{ end }}
+    default:
+      i++
+      goto STATE_{{ $start.Id }}
+    }
+{{ end }}
 
 {{ range .States }}
   STATE_{{ .Id }}:
@@ -34,13 +48,12 @@ func Match{{ .TagName }}(bytes []byte) bool {
   {{ else }}
     switch bytes[i] {
     {{ range $key, $next := .Nexts }}
-  case {{ printf "%q" $key }}:
-        i++
-        goto STATE_{{ $next.Id }}
+    case {{ printf "%q" $key }}:
+      i++
+      goto STATE_{{ $next.Id }}
     {{ end }}
-      default:
-        i++
-        goto STATE_{{ $start.Id }}
+    default:
+      goto STATE_{{ $start.Id }}
     }
   {{ end }}
 {{ end }}
@@ -48,10 +61,12 @@ func Match{{ .TagName }}(bytes []byte) bool {
 `))
 
 func generate(w io.Writer, pkg_name, tag_name string, st *state) error {
+	states := listStates(st)
 	err := templateFile.Execute(w, map[string]interface{}{
 		"PackageName": pkg_name,
 		"TagName":     tag_name,
-		"States":      listStates(st),
+		"Start":       states[0],
+		"States":      states[1:],
 	})
 	if err != nil {
 		return err
