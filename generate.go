@@ -31,10 +31,10 @@ func Match{{ .TagName }}(bytes []byte) bool {
       return i == len(bytes)
   {{ else }}
     switch bytes[i] {
-    {{ range .OutBounds }}
-      case {{ printf "%q" .Key }}:
+    {{ range $key, $next := .Nexts }}
+	case {{ printf "%q" $key }}:
         i++
-        goto STATE_{{ .State.Id }}
+        goto STATE_{{ $next.Id }}
     {{ end }}
       default:
         return false

@@ -11,8 +11,8 @@ func allStates(st *state) []*state {
 		}
 		states = append(states, s)
 		marked[s.Id] = true
-		for _, edg := range s.OutBounds {
-			traverse(edg.State)
+		for _, next := range s.Nexts {
+			traverse(next)
 		}
 	}
 	traverse(st)

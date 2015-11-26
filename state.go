@@ -1,21 +1,16 @@
 package triematcher
 
 type state struct {
-	Id        int
-	OutBounds []edge
-	IsGoal    bool
-}
-
-type edge struct {
-	Key   byte
-	State *state
+	Id     int
+	Nexts  map[byte]*state
+	IsGoal bool
 }
 
 var state_id_seq = 0
 
 func newState() *state {
 	state_id_seq++
-	return &state{Id: state_id_seq - 1, OutBounds: []edge{}}
+	return &state{Id: state_id_seq - 1, Nexts: map[byte]*state{}}
 }
 
 func initMap(inputs []string) *state {
@@ -31,9 +26,12 @@ func (st *state) addBytes(bytes []byte) {
 		st.IsGoal = true
 		return
 	}
-	next := newState()
+	var next = st.Nexts[bytes[0]]
+	if next == nil {
+		next := newState()
+		st.Nexts[bytes[0]] = next
+	}
 	next.addBytes(bytes[1:])
-	st.addOutbound(bytes[0], next)
 }
 
 func (st *state) addString(str string) {
@@ -41,24 +39,10 @@ func (st *state) addString(str string) {
 		st.IsGoal = true
 		return
 	}
-	next := newState()
-	next.addString(str[1:])
-	st.addOutbound(str[0], next)
-}
-
-func (st *state) addOutbound(key byte, next *state) {
-	st.OutBounds = append(st.OutBounds, edge{Key: key, State: next})
-}
-
-func (st *state) getNextByKey(k byte) *state {
-	for _, edg := range st.OutBounds {
-		if edg.Key == k {
-			return edg.State
-		}
+	next := st.Nexts[str[0]]
+	if next == nil {
+		next = newState()
+		st.Nexts[str[0]] = next
 	}
-	return nil
-}
-
-func (st *state) HasOutboundKey(k byte) bool {
-	return st.getNextByKey(k) != nil
+	next.addString(str[1:])
 }
