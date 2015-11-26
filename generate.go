@@ -1,7 +1,7 @@
 package triematcher
 
 import (
-	"os"
+	"io"
 	"text/template"
 )
 
@@ -42,13 +42,15 @@ func {{ .FuncName }}(str string) bool {
 }
 `))
 
-func generate(pkg_name, func_name string, st *state) {
-	err := templateFile.Execute(os.Stdout, map[string]interface{}{
+func generate(w io.Writer, pkg_name, func_name string, st *state) error {
+	err := templateFile.Execute(w, map[string]interface{}{
 		"PackageName": pkg_name,
 		"FuncName":    func_name,
 		"States":      allStates(st),
 	})
 	if err != nil {
-		panic(err)
+		return err
+	} else {
+		return nil
 	}
 }
