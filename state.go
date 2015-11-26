@@ -7,7 +7,7 @@ type state struct {
 }
 
 type edge struct {
-	Key   string
+	Key   byte
 	State *state
 }
 
@@ -26,6 +26,16 @@ func initMap(inputs []string) *state {
 	return start_s
 }
 
+func (st *state) addBytes(bytes []byte) {
+	for len(bytes) == 0 {
+		st.IsGoal = true
+		return
+	}
+	next := newState()
+	next.addBytes(bytes[1:])
+	st.addOutbound(bytes[0], next)
+}
+
 func (st *state) addString(str string) {
 	for len(str) == 0 {
 		st.IsGoal = true
@@ -33,14 +43,14 @@ func (st *state) addString(str string) {
 	}
 	next := newState()
 	next.addString(str[1:])
-	st.addOutbound(str[0:1], next)
+	st.addOutbound(str[0], next)
 }
 
-func (st *state) addOutbound(key string, next *state) {
+func (st *state) addOutbound(key byte, next *state) {
 	st.OutBounds = append(st.OutBounds, edge{Key: key, State: next})
 }
 
-func (st *state) getNextByKey(k string) *state {
+func (st *state) getNextByKey(k byte) *state {
 	for _, edg := range st.OutBounds {
 		if edg.Key == k {
 			return edg.State
@@ -49,6 +59,6 @@ func (st *state) getNextByKey(k string) *state {
 	return nil
 }
 
-func (st *state) HasOutboundKey(k string) bool {
+func (st *state) HasOutboundKey(k byte) bool {
 	return st.getNextByKey(k) != nil
 }

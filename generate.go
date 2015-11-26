@@ -12,26 +12,28 @@ var templateFile = template.Must(template.New("file").Parse(`
 
 package {{ .PackageName }}
 
-import (
-  "strings"
-)
+func Match{{ .TagName }}String(str string) bool {
+  return Match{{ .TagName}}(([]byte)(str))
+}
 
-func {{ .FuncName }}(str string) bool {
+func Match{{ .TagName }}(bytes []byte) bool {
   defer func(){
     recover() // Must be "index out of range" error for string.
               // Ignore and return false.
   }()
 
+  i := 0
+
   goto STATE_{{ with index .States 0 }}{{ .Id }}{{ end }}
 {{ range .States }}
   STATE_{{ .Id }}:
   {{ if .IsGoal }}
-      return len(str) == 0
+      return i == len(bytes)
   {{ else }}
-    switch{
+    switch bytes[i] {
     {{ range .OutBounds }}
-      case strings.HasPrefix(str, {{ printf "%q" .Key }}):
-        str = str[{{ .Key | len }}:]
+      case {{ printf "%q" .Key }}:
+        i++
         goto STATE_{{ .State.Id }}
     {{ end }}
       default:
@@ -42,10 +44,10 @@ func {{ .FuncName }}(str string) bool {
 }
 `))
 
-func generate(w io.Writer, pkg_name, func_name string, st *state) error {
+func generate(w io.Writer, pkg_name, tag_name string, st *state) error {
 	err := templateFile.Execute(w, map[string]interface{}{
 		"PackageName": pkg_name,
-		"FuncName":    func_name,
+		"TagName":     tag_name,
 		"States":      allStates(st),
 	})
 	if err != nil {

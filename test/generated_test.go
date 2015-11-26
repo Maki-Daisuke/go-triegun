@@ -14,18 +14,18 @@ func TestGenerate(t *testing.T) {
 		"com.apple.Maps", // Map app?
 		"ocspd/",         // Mac OS X's ocspd, verifying certificate validity
 	} {
-		if !MatchUA(it) {
+		if !MatchUAString(it) {
 			t.Errorf(`should match against %q, but didn't`, it)
 		}
 	}
 
-	if MatchUA(`hogeFuga`) {
+	if MatchUAString(`hogeFuga`) {
 		t.Error(`should not match against "hogeFuga", but did`)
 	}
-	if MatchUA(`com.apple.geodd`) {
+	if MatchUAString(`com.apple.geodd`) {
 		t.Error(`should not match against "com.apple.geodd", but did`)
 	}
-	if MatchUA(`Apple`) {
+	if MatchUAString(`Apple`) {
 		t.Error(`should not match against "Apple", but did`)
 	}
 }
