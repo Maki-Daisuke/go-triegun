@@ -24,20 +24,23 @@ func Match{{ .TagName }}(bytes []byte) bool {
 
   i := 0
 
-  goto STATE_{{ with index .States 0 }}{{ .Id }}{{ end }}
+{{ $start := index .States 0 }}
+  goto STATE_{{ $start.Id }}
+
 {{ range .States }}
   STATE_{{ .Id }}:
   {{ if .IsGoal }}
-      return i == len(bytes)
+      return true
   {{ else }}
     switch bytes[i] {
     {{ range $key, $next := .Nexts }}
-	case {{ printf "%q" $key }}:
+  case {{ printf "%q" $key }}:
         i++
         goto STATE_{{ $next.Id }}
     {{ end }}
       default:
-        return false
+        i++
+        goto STATE_{{ $start.Id }}
     }
   {{ end }}
 {{ end }}
@@ -48,11 +51,35 @@ func generate(w io.Writer, pkg_name, tag_name string, st *state) error {
 	err := templateFile.Execute(w, map[string]interface{}{
 		"PackageName": pkg_name,
 		"TagName":     tag_name,
-		"States":      allStates(st),
+		"States":      listStates(st),
 	})
 	if err != nil {
 		return err
 	} else {
 		return nil
 	}
+}
+
+// Unlike allStates, this does not traverse goal state.
+func listStates(start *state) []*state {
+	marked := map[int]bool{}
+	states := []*state{}
+
+	var traverse func(*state)
+	traverse = func(s *state) {
+		if marked[s.Id] {
+			return
+		}
+		states = append(states, s)
+		marked[s.Id] = true
+		if s.IsGoal {
+			return
+		}
+		for _, next := range s.Nexts {
+			traverse(next)
+		}
+	}
+	traverse(start)
+
+	return states
 }
