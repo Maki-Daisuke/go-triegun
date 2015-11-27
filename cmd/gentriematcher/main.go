@@ -6,8 +6,8 @@ import (
 	"regexp"
 
 	"github.com/Maki-Daisuke/go-argvreader"
+	"github.com/Maki-Daisuke/go-gentriematcher"
 	"github.com/Maki-Daisuke/go-lines"
-	"github.com/Maki-Daisuke/go-triematcher"
 	"github.com/jessevdk/go-flags"
 )
 
