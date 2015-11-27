@@ -19,9 +19,10 @@ var opts struct {
 var reId = regexp.MustCompile(`^[0-9a-zA-Z_]+$`)
 
 func main() {
-	args, err := flags.Parse(&opts)
+	parser := flags.NewParser(&opts, flags.Default)
+	parser.Usage = "[OPTIONS] [FILES...]"
+	args, err := parser.Parse()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 	if !reId.MatchString(opts.PkgName) {
