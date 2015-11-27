@@ -1,19 +1,12 @@
 package main
 
+// Run "go generate" first to run test.
+//go:generate go run genmatcher.go
+
 import "testing"
 
 func TestGenerate(t *testing.T) {
-	for _, it := range []string{
-		"AppleCoreMedia", // iOS native quick time player
-		"Apple-PubSub",   // RSS reader for screen saver?
-		"cloudd/",        // iCloud daemon
-		"itunesstored",
-		"gamed/", // Probably, Apple Game Center
-		"com.apple.geod",
-		"com.apple.invitation-registration",
-		"com.apple.Maps", // Map app?
-		"ocspd/",         // Mac OS X's ocspd, verifying certificate validity
-	} {
+	for _, it := range signatures {
 		if !MatchUAString(it) {
 			t.Errorf(`should match against %q, but didn't`, it)
 		}
