@@ -8,15 +8,12 @@ import (
 )
 
 var signatures = []string{
-	"AppleCoreMedia", // iOS native quick time player
-	"Apple-PubSub",   // RSS reader for screen saver?
-	"cloudd/",        // iCloud daemon
-	"itunesstored",
-	"gamed/", // Probably, Apple Game Center
-	"com.apple.geod",
-	"com.apple.invitation-registration",
-	"com.apple.Maps", // Map app?
-	"ocspd/",         // Mac OS X's ocspd, verifying certificate validity
+	"CFNetwork/",
+	"iOS",
+	"iPhone OS",
+	"iPhone;",
+	"iPad3,",
+	"Mac OS X",
 }
 
 func main() {
