@@ -42,12 +42,14 @@ Benchmark
 Run by my laptop (Macbook 2015, 1.3 GHz Intel Core-M):
 
 ```
+$ go test -bench .
 PASS
-BenchmarkRegexp-4   	   10000	    201187 ns/op
-BenchmarkGeneraetd-4	  200000	      8651 ns/op
+BenchmarkRegexp-4   	   10000	    219568 ns/op
+BenchmarkGeneraetd-4	  200000	      7679 ns/op
+ok  	github.com/Maki-Daisuke/go-gentriematcher/test	3.842s
 ```
 
-20x faster than `regexp`! It can be much faseter in real world program.
+28x faster than `regexp`! It can be much faseter in real world program.
 
 You can run the same benchmark test as follows:
 
