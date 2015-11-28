@@ -77,7 +77,7 @@ func Match{{ .TagName }}(bytes []byte) bool {
 `))
 
 func generateMatcherFromState(w io.Writer, tag_name string, st *state) error {
-	states := listStates(st)
+	states := allStatesUpToGoal(st)
 	err := templateFile.Execute(w, map[string]interface{}{
 		"TagName": tag_name,
 		"Start":   states[0],
@@ -88,28 +88,4 @@ func generateMatcherFromState(w io.Writer, tag_name string, st *state) error {
 	} else {
 		return nil
 	}
-}
-
-// Unlike allStates, this does not traverse goal state.
-func listStates(start *state) []*state {
-	marked := map[int]bool{}
-	states := []*state{}
-
-	var traverse func(*state)
-	traverse = func(s *state) {
-		if marked[s.Id] {
-			return
-		}
-		states = append(states, s)
-		marked[s.Id] = true
-		if s.IsGoal {
-			return
-		}
-		for _, next := range s.Nexts {
-			traverse(next)
-		}
-	}
-	traverse(start)
-
-	return states
 }
