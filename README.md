@@ -8,8 +8,8 @@ trie (prefix tree), which is far faster than `regexp` standard package.
 
 ## Description
 
-Testing whether a string contains another string is trivial but general topic.
-For example, detecting bot from User-Agent is a kind of this task. You may do
+Testing whether a string contains another string is trivial and daily task.
+For example, detecting bot from User-Agent is a kind of this task. You can do
 it with using `regexp` package like this:
 
 ```go
