@@ -174,13 +174,13 @@ var signatures = []string{
 func main() {
 	out, err := os.OpenFile("matchers_generated.go", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
-    panic(err)
+		panic(err)
 	}
 	fmt.Fprintln(out, "package main")
-  // Generate matcher code into "matchers_generated.go" with empty tag ("").
+	// Generate matcher code into "matchers_generated.go" with empty tag ("").
 	err = gentriematcher.GenerateMatcher(out, "", signatures)
 	if err != nil {
-    panic(err)
+		panic(err)
 	}
 }
 ```
@@ -193,20 +193,20 @@ package main
 //go:generate go run makenmatchers.go
 
 import (
-  "bufio"
-  "os"
+	"bufio"
+	"os"
 )
 
 func main(){
-  r := bufio.NewReader(os.Stdin)
-  line, err := r.ReadSlice('\n')
-  if Match(line) {
-    // do something
-  }
-  // or
-  if MatchString(string(line)) {
-    // do another thing
-  }
+	r := bufio.NewReader(os.Stdin)
+	line, err := r.ReadSlice('\n')
+	if Match(line) {
+		// do something
+	}
+	// or
+	if MatchString(string(line)) {
+		// do another thing
+	}
 }
 ```
 
@@ -220,7 +220,7 @@ This will produce file "matchers_generated.go" with the matchers code.
 You can now build and run your program:
 
 ```
-$ go run main.go
+$ go build
 ```
 
 This way is recommended, because build process is clearly documented in your
