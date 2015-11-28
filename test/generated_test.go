@@ -9,6 +9,16 @@ import (
 	"testing"
 )
 
+var reApple *regexp.Regexp
+
+func init() {
+	s := make([]string, len(signatures))
+	for i := range signatures {
+		s[i] = regexp.QuoteMeta(signatures[i])
+	}
+	reApple = regexp.MustCompile(strings.Join(s, "|"))
+}
+
 var userAgents = []string{
 	"Mozilla/5.0 (Linux; U; Android 4.0.4; ja-jp; SonyEricssonSO-03D Build/6.1.F.0.106) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
 	"Mozilla/5.0 (Windows NT 6.3; WOW64; Trident/7.0; rv:11.0) like Gecko/20100101 Firefox/12.0",
@@ -28,29 +38,10 @@ var userAgents = []string{
 	"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10240",
 }
 
-var answers = []bool{
-	false,
-	false,
-	false,
-	true,
-	false,
-	true,
-	true,
-	true,
-	true,
-	false,
-	false,
-	true,
-	false,
-	false,
-	false,
-	false,
-}
-
 func TestGenerate(t *testing.T) {
-	for i, it := range userAgents {
-		if MatchUAString(it) != answers[i] {
-			if answers[i] {
+	for _, it := range userAgents {
+		if MatchUAString(it) != reApple.MatchString(it) {
+			if reApple.MatchString(it) {
 				t.Errorf(`should match against %q, but didn't`, it)
 			} else {
 				t.Errorf(`should not match against %q, but did`, it)
@@ -60,10 +51,6 @@ func TestGenerate(t *testing.T) {
 }
 
 func BenchmarkRegexp(b *testing.B) {
-	for i := range signatures {
-		signatures[i] = regexp.QuoteMeta(signatures[i])
-	}
-	reApple := regexp.MustCompile(strings.Join(signatures, "|"))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		for _, ua := range userAgents {
