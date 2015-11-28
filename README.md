@@ -94,17 +94,16 @@ Baiduspider
 bingbot
 Googlebot
 Twitterbot
-$ gentriematcher signatures.txt > matcher.go
+$ gentriematcher -T Bot signatures.txt > matcher.go
 ```
 
 It generates the following two functions:
 
 ```golang
-func Match<TAG>(b []byte) bool
-func Match<TAG>String(s string) bool
+func MatchBot(b []byte) bool
+func MatchBotString(s string) bool
 ```
 
-Here, `<TAG>` is a string specified by `-P` option (see below).
 You can call them as you expect:
 
 ```go
@@ -118,11 +117,11 @@ import (
 func main(){
   r := bufio.NewReader(os.Stdin)
   line, err := r.ReadSlice('\n')
-  if Match(line) {
+  if MatchBot(line) {
     // do something
   }
   // or
-  if MatchString(string(line)) {
+  if MatchBotString(string(line)) {
     // do another thing
   }
 }
