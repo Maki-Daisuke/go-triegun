@@ -13,7 +13,7 @@ func newState() *state {
 	return &state{Id: state_id_seq - 1, Nexts: map[byte]*state{}}
 }
 
-func initMap(inputs []string) *state {
+func newDFAFromStrings(inputs []string) *state {
 	start_s := newState()
 	for _, str := range inputs {
 		start_s.addString(str)

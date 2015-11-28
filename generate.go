@@ -16,7 +16,7 @@ func GenerateMatcher(w io.Writer, tag_name string, signatures []string) error {
 	if tag_name != "" && !reId.MatchString(tag_name) {
 		return fmt.Errorf(`GenerateMatcher: tag name must be an identifier, but "%s" is not`, tag_name)
 	}
-	m := initMap(signatures)
+	m := newDFAFromStrings(signatures)
 	allowSubmatch(m)
 	return generateMatcherFromState(w, tag_name, m)
 }
