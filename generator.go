@@ -14,8 +14,9 @@ var ErrEmpty = errors.New("triegun can't construct trie with empty string set")
 type Plant struct {
 	PkgName          string
 	TagName          string
-	DisableMatch     bool
 	DisableHasPrefix bool
+	DisableIsIn      bool
+	DisableMatch     bool
 	words            []string
 }
 
@@ -77,6 +78,11 @@ func (p *Plant) Gen(w io.Writer) error {
 	}
 	if !p.DisableHasPrefix {
 		if err := p.genHasPrefix(w, dfa); err != nil {
+			return err
+		}
+	}
+	if !p.DisableIsIn {
+		if err := p.genIsIn(w, dfa); err != nil {
 			return err
 		}
 	}

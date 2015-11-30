@@ -105,3 +105,57 @@ func BenchmarkHasPrefixGeneraetd(b *testing.B) {
 		}
 	}
 }
+
+var names = []string{
+	"Safari",
+	"Firefox",
+	"AppleWebKit",
+	"iPhone OS",
+	"CFNetwork/",
+	"CFNetwork",
+	"iOS",
+	"iPhone OS",
+	"iPhone;",
+	"iPad3,",
+	"iPad3",
+	"Mac OS X",
+}
+
+var reIsIn *regexp.Regexp
+
+func init() {
+	s := make([]string, len(signatures))
+	for i := range signatures {
+		s[i] = regexp.QuoteMeta(signatures[i])
+	}
+	reIsIn = regexp.MustCompile("^(?:" + strings.Join(s, "|") + ")$")
+}
+
+func TestIsIn(t *testing.T) {
+	for _, it := range names {
+		if IsInUAString(it) != reIsIn.MatchString(it) {
+			if reIsIn.MatchString(it) {
+				t.Errorf(`should match against %q, but didn't`, it)
+			} else {
+				t.Errorf(`should not match against %q, but did`, it)
+			}
+		}
+	}
+}
+
+func BenchmarkIsInRegexp(b *testing.B) {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		for _, ua := range names {
+			reIsIn.MatchString(ua)
+		}
+	}
+}
+
+func BenchmarkIsInGeneraetd(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		for _, ua := range names {
+			IsInUAString(ua)
+		}
+	}
+}
