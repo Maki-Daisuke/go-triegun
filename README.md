@@ -176,9 +176,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Fprintln(out, "package main")
-	// Generate matcher code into "matchers_generated.go" with empty tag ("").
-	err = triegun.GenerateMatcher(out, "", signatures)
+
+	t := triegun.New()
+	t.PkgName = "main"
+	t.TagName = "Bot"
+	t.AddString(signatures...)
+
+	// Generate matcher code into "matchers_generated.go" with "Bot" tag.
+	err = t.Gen(out)
 	if err != nil {
 		panic(err)
 	}
@@ -200,17 +205,17 @@ import (
 func main(){
 	r := bufio.NewReader(os.Stdin)
 	line, err := r.ReadSlice('\n')
-	if Match(line) {
+	if MatchBot(line) {
 		// do something
 	}
 	// or
-	if MatchString(string(line)) {
+	if MatchBotString(string(line)) {
 		// do another thing
 	}
 }
 ```
 
-Now, run "go generate":
+Now, run `go generate`:
 
 ```
 $ go generate
