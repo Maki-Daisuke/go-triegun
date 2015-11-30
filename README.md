@@ -44,12 +44,14 @@ Run by my laptop (Macbook 2015, 1.3 GHz Intel Core-M):
 ```
 $ go test -bench .
 PASS
-BenchmarkRegexp-4   	   10000	    219568 ns/op
-BenchmarkGeneraetd-4	  200000	      7679 ns/op
-ok  	github.com/Maki-Daisuke/go-triegun/test	3.842s
+BenchmarkRegexp-4            	   10000	    194925 ns/op
+BenchmarkGeneraetd-4         	  200000	      6676 ns/op
+BenchmarkHasPrefixRegexp-4   	   10000	    200552 ns/op
+BenchmarkHasPrefixGeneraetd-4	 1000000	      2347 ns/op
+ok  	github.com/Maki-Daisuke/go-triegun/test	8.525s
 ```
 
-28x faster than `regexp`! It can be much faseter in real world program.
+29x faster than `regexp`! It can be much faseter in real world program.
 
 You can run the same benchmark test as follows:
 
@@ -97,9 +99,11 @@ Twitterbot
 $ triegun -T Bot signatures.txt > matcher.go
 ```
 
-It generates the following two functions:
+It generates the following four functions:
 
 ```golang
+func HasPrefixBot(b []byte) bool
+func HasPrefixBotString(s string) bool
 func MatchBot(b []byte) bool
 func MatchBotString(s string) bool
 ```
