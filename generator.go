@@ -12,11 +12,11 @@ import "text/template"
 var ErrEmpty = errors.New("triegun can't construct trie with empty string set")
 
 type Plant struct {
-	PkgName        string
-	TagName        string
-	DisableMatcher bool
-	DisablePrefix  bool
-	words          []string
+	PkgName          string
+	TagName          string
+	DisableMatch     bool
+	DisableHasPrefix bool
+	words            []string
 }
 
 func New() *Plant {
@@ -75,12 +75,12 @@ func (p *Plant) Gen(w io.Writer) error {
 	if err := p.preamble(w); err != nil {
 		return err
 	}
-	if !p.DisablePrefix {
+	if !p.DisableHasPrefix {
 		if err := p.genHasPrefix(w, dfa); err != nil {
 			return err
 		}
 	}
-	if !p.DisableMatcher {
+	if !p.DisableMatch {
 		if err := p.genMatcher(w, dfa); err != nil {
 			return err
 		}
