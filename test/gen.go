@@ -1,13 +1,12 @@
-// +build ignore
-
 package main
 
 import (
-	"fmt"
 	"os"
 
 	triegun "github.com/Maki-Daisuke/go-triegun"
 )
+
+const OUT_FILE = "ua_triegun.go"
 
 var signatures = []string{
 	"CFNetwork/",
@@ -19,13 +18,18 @@ var signatures = []string{
 }
 
 func main() {
-	out, err := os.OpenFile("ua_genprefix.go", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	out, err := os.OpenFile(OUT_FILE, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Fprintln(out, "package main")
-	err = triegun.GenerateHasPrefix(out, "UA", signatures)
+
+	t := triegun.New()
+	t.TagName = "UA"
+	t.AddString(signatures...)
+	err = t.Gen(out)
+	out.Close()
 	if err != nil {
+		os.Remove(OUT_FILE)
 		panic(err)
 	}
 }
