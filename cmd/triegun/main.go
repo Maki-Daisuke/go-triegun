@@ -7,6 +7,7 @@ import (
 
 	"github.com/Maki-Daisuke/go-argvreader"
 	"github.com/Maki-Daisuke/go-lines"
+	"github.com/Maki-Daisuke/go-triegun"
 	"github.com/jessevdk/go-flags"
 )
 
@@ -33,7 +34,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	signatures := []string{}
+	t := triegun.New()
+	t.PkgName = opts.PkgName
+	t.TagName = opts.TagName
 
 	reader := argvreader.NewReader(args)
 	line_chan, err_chan := lines.LinesWithError(reader)
@@ -41,7 +44,7 @@ func main() {
 		if line == "" {
 			continue
 		}
-		signatures = append(signatures, line)
+		t.AddString(line)
 	}
 	err = <-err_chan
 	if err != nil {
@@ -49,9 +52,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("package %s\n\n", opts.PkgName)
-
-	err = triegun.GenerateMatcher(os.Stdout, opts.TagName, signatures)
+	err = t.Gen(os.Stdout)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
