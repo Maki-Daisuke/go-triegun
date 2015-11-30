@@ -1,12 +1,6 @@
 package main
 
-import (
-	"os"
-
-	triegun "github.com/Maki-Daisuke/go-triegun"
-)
-
-const OUT_FILE = "ua_triegun.go"
+import triegun "github.com/Maki-Daisuke/go-triegun"
 
 var signatures = []string{
 	"CFNetwork/",
@@ -18,18 +12,11 @@ var signatures = []string{
 }
 
 func main() {
-	out, err := os.OpenFile(OUT_FILE, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		panic(err)
-	}
-
 	t := triegun.New()
 	t.TagName = "UA"
 	t.AddString(signatures...)
-	err = t.Gen(out)
-	out.Close()
+	err := t.GenFile("ua_triegun.go")
 	if err != nil {
-		os.Remove(OUT_FILE)
 		panic(err)
 	}
 }

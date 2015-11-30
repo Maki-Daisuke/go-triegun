@@ -161,12 +161,7 @@ generate the matchers like this:
 
 package main
 
-import (
-	"fmt"
-	"os"
-
-	triegun "github.com/Maki-Daisuke/go-triegun"
-)
+import triegun "github.com/Maki-Daisuke/go-triegun"
 
 var signatures = []string{
   "Baiduspider",
@@ -176,18 +171,12 @@ var signatures = []string{
 }
 
 func main() {
-	out, err := os.OpenFile("matchers_generated.go", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		panic(err)
-	}
-
 	t := triegun.New()
 	t.PkgName = "main"
 	t.TagName = "Bot"
 	t.AddString(signatures...)
-
 	// Generate matcher code into "matchers_generated.go" with "Bot" tag.
-	err = t.Gen(out)
+	err := t.GenFile("matchers_generated.go")
 	if err != nil {
 		panic(err)
 	}

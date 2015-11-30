@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"regexp"
 )
 import "text/template"
@@ -35,6 +36,27 @@ func (p *Plant) AddString(strs ...string) {
 	for _, s := range strs {
 		p.words = append(p.words, s)
 	}
+}
+
+func (p *Plant) GenFile(file string) (err error) {
+	out, err := os.OpenFile(file, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		out.Close()
+		if e := recover(); e != nil {
+			var ok bool
+			if err, ok = e.(error); !ok {
+				panic(e)
+			}
+		}
+		if err != nil {
+			os.Remove(file)
+		}
+	}()
+	err = p.Gen(out)
+	return
 }
 
 var reId = regexp.MustCompile(`^[0-9a-zA-Z_]+$`)
