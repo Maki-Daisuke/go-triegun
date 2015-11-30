@@ -1,4 +1,4 @@
-package triematcher
+package triegun
 
 type state struct {
 	Id     int

@@ -6,7 +6,6 @@ import (
 	"regexp"
 
 	"github.com/Maki-Daisuke/go-argvreader"
-	"github.com/Maki-Daisuke/go-gentriematcher"
 	"github.com/Maki-Daisuke/go-lines"
 	"github.com/jessevdk/go-flags"
 )
@@ -52,7 +51,7 @@ func main() {
 
 	fmt.Printf("package %s\n\n", opts.PkgName)
 
-	err = triematcher.GenerateMatcher(os.Stdout, opts.TagName, signatures)
+	err = triegun.GenerateMatcher(os.Stdout, opts.TagName, signatures)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

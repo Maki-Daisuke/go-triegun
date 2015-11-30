@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	gentriematcher "github.com/Maki-Daisuke/go-gentriematcher"
+	triegun "github.com/Maki-Daisuke/go-triegun"
 )
 
 var signatures = []string{
@@ -24,7 +24,7 @@ func main() {
 		panic(err)
 	}
 	fmt.Fprintln(out, "package main")
-	err = gentriematcher.GenerateHasPrefix(out, "UA", signatures)
+	err = triegun.GenerateHasPrefix(out, "UA", signatures)
 	if err != nil {
 		panic(err)
 	}

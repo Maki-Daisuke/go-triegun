@@ -1,4 +1,4 @@
-package triematcher
+package triegun
 
 func allowSubmatch(start *state) *state {
 	for _, state := range allStates(start)[1:] { // Ignoring the start state

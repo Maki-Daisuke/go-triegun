@@ -1,4 +1,4 @@
-package triematcher
+package triegun
 
 func allStates(st *state) []*state {
 	marked := map[int]bool{}

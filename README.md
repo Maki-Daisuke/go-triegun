@@ -1,8 +1,8 @@
-# go-gentriematcher
+# go-triegun
 
-    import "github.com/Maki-Daisuke/go-gentriematcher"
+    import triegun "github.com/Maki-Daisuke/go-triegun"
 
-Package `go-gentriematcher` generates Golang code for matching string based on
+Package `go-triegun` generates Golang code for matching string based on
 trie (prefix tree), which is far faster than `regexp` standard package.
 
 
@@ -46,7 +46,7 @@ $ go test -bench .
 PASS
 BenchmarkRegexp-4   	   10000	    219568 ns/op
 BenchmarkGeneraetd-4	  200000	      7679 ns/op
-ok  	github.com/Maki-Daisuke/go-gentriematcher/test	3.842s
+ok  	github.com/Maki-Daisuke/go-triegun/test	3.842s
 ```
 
 28x faster than `regexp`! It can be much faseter in real world program.
@@ -54,8 +54,8 @@ ok  	github.com/Maki-Daisuke/go-gentriematcher/test	3.842s
 You can run the same benchmark test as follows:
 
 ```
-$ go get github.com/Maki-Daisuke/go-gentriematcher
-$ cd $GOPATH/src/github.com/Maki-Daisuke/go-gentriematcher/test
+$ go get github.com/Maki-Daisuke/go-triegun
+$ cd $GOPATH/src/github.com/Maki-Daisuke/go-triegun/test
 $ go generate
 $ go test -bench .
 ```
@@ -67,14 +67,14 @@ There are two way to use this package:
 
 ### 1. Using Command
 
-This package includes a command called `gentriematcher`.
+This package includes a command called `triegun`.
 You can install it just by typing this in your command line:
 
 ```
-$ go get github.com/Maki-Daisuke/go-gentriematcher/cmd/gentriematcher
-$ gentriematcher -h
+$ go get github.com/Maki-Daisuke/go-triegun/cmd/triegun
+$ triegun -h
 Usage:
-  gentriematcher [OPTIONS] [FILES]
+  triegun [OPTIONS] [FILES]
 
 Application Options:
   -P, --package= package name (default: main)
@@ -84,7 +84,7 @@ Help Options:
   -h, --help     Show this help message
 ```
 
-`gentriematcher` reads text from files specified as command arguments or STDIN
+`triegun` reads text from files specified as command arguments or STDIN
 if no argument is passed. Then, it generate Go code matching any of the input
 lines and output the code to STDOUT. For example:
 
@@ -94,7 +94,7 @@ Baiduspider
 bingbot
 Googlebot
 Twitterbot
-$ gentriematcher -T Bot signatures.txt > matcher.go
+$ triegun -T Bot signatures.txt > matcher.go
 ```
 
 It generates the following two functions:
@@ -136,7 +136,7 @@ func main(){
   - Tag that is icluded in the generated functions
   - For example, if you specify `"UA"`, it generates functions `MatchUA` and `MatchUAString`
 
-This way (use `gentriematcher`) just works well, but does not look so cool.
+This way (use `triegun`) just works well, but does not look so cool.
 And sometimes, it's not useful, if you want to match against newline character
 ("\n") or other special characters. In those case, you can use "go generate".
 See the next section.
@@ -161,7 +161,7 @@ import (
 	"fmt"
 	"os"
 
-	gentriematcher "github.com/Maki-Daisuke/go-gentriematcher"
+	triegun "github.com/Maki-Daisuke/go-triegun"
 )
 
 var signatures = []string{
@@ -178,7 +178,7 @@ func main() {
 	}
 	fmt.Fprintln(out, "package main")
 	// Generate matcher code into "matchers_generated.go" with empty tag ("").
-	err = gentriematcher.GenerateMatcher(out, "", signatures)
+	err = triegun.GenerateMatcher(out, "", signatures)
 	if err != nil {
 		panic(err)
 	}
