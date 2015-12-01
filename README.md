@@ -76,14 +76,17 @@ You can install it just by typing this in your command line:
 $ go get github.com/Maki-Daisuke/go-triegun/cmd/triegun
 $ triegun -h
 Usage:
-  triegun [OPTIONS] [FILES]
+  triegun [OPTIONS] [FILES...]
 
 Application Options:
-  -P, --package= package name (default: main)
-  -T, --tag=     tag name included in the generated functions
+  -p, --package=           package name (default: main)
+  -t, --tag=               tag name included in the generated functions
+  -I, --disable-isin       Suppress generating code for IsIn* functions (default: false)
+  -M, --disable-match      Suppress generating code for Match* functions (default: false)
+  -P, --disable-hasprefix  Suppress generating code for HasPrefix* functions (default: false)
 
 Help Options:
-  -h, --help     Show this help message
+  -h, --help               Show this help message
 ```
 
 `triegun` reads text from files specified as command arguments or STDIN
@@ -130,15 +133,6 @@ func main(){
   }
 }
 ```
-
-#### Options
-
-- `-P` | `--package`
-  - Package name used in the generated file.
-  - Default: `"main"`
-- `-T` | `--tag`
-  - Tag that is icluded in the generated functions
-  - For example, if you specify `"UA"`, it generates functions `MatchUA` and `MatchUAString`
 
 This way (use `triegun`) just works well, but does not look so cool.
 And sometimes, it's not useful, if you want to match against newline character
