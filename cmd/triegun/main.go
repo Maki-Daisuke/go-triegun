@@ -12,8 +12,11 @@ import (
 )
 
 var opts struct {
-	PkgName string `short:"P" long:"package" default:"main" description:"package name"`
-	TagName string `short:"T" long:"tag" default:"" description:"tag name included in the generated functions"`
+	PkgName          string `short:"p" long:"package" default:"main" description:"package name"`
+	TagName          string `short:"t" long:"tag" default:"" description:"tag name included in the generated functions"`
+	DisableIsIn      bool   `short:"I" long:"disable-isin" default:"false" description:"Suppress generating code for IsIn* functions"`
+	DisableMatch     bool   `short:"M" long:"disable-match" default:"false" description:"Suppress generating code for Match* functions"`
+	DisableHasPrefix bool   `short:"P" long:"disable-hasprefix" default:"false" description:"Suppress generating code for HasPrefix* functions"`
 }
 
 var reId = regexp.MustCompile(`^[0-9a-zA-Z_]+$`)
@@ -37,6 +40,9 @@ func main() {
 	t := triegun.New()
 	t.PkgName = opts.PkgName
 	t.TagName = opts.TagName
+	t.DisableIsIn = opts.DisableIsIn
+	t.DisableMatch = opts.DisableMatch
+	t.DisableHasPrefix = opts.DisableHasPrefix
 
 	reader := argvreader.NewReader(args)
 	line_chan, err_chan := lines.LinesWithError(reader)
