@@ -40,7 +40,7 @@ var userAgents = []string{
 
 func TestGenerate(t *testing.T) {
 	for _, it := range userAgents {
-		if MatchUAString(it) != reApple.MatchString(it) {
+		if ContainsUAString(it) != reApple.MatchString(it) {
 			if reApple.MatchString(it) {
 				t.Errorf(`should match against %q, but didn't`, it)
 			} else {
@@ -50,7 +50,7 @@ func TestGenerate(t *testing.T) {
 	}
 }
 
-func BenchmarkRegexp(b *testing.B) {
+func BenchmarkContainsRegexp(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		for _, ua := range userAgents {
@@ -59,10 +59,10 @@ func BenchmarkRegexp(b *testing.B) {
 	}
 }
 
-func BenchmarkGeneraetd(b *testing.B) {
+func BenchmarkContainsGeneraetd(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for _, ua := range userAgents {
-			MatchUAString(ua)
+			ContainsUAString(ua)
 		}
 	}
 }

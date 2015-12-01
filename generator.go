@@ -16,7 +16,7 @@ type Plant struct {
 	TagName          string
 	DisableHasPrefix bool
 	DisableIsIn      bool
-	DisableMatch     bool
+	DisableContains  bool
 	words            []string
 }
 
@@ -86,8 +86,8 @@ func (p *Plant) Gen(w io.Writer) error {
 			return err
 		}
 	}
-	if !p.DisableMatch {
-		if err := p.genMatcher(w, dfa); err != nil {
+	if !p.DisableContains {
+		if err := p.genContains(w, dfa); err != nil {
 			return err
 		}
 	}

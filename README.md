@@ -44,14 +44,16 @@ Run by my laptop (Macbook 2015, 1.3 GHz Intel Core-M):
 ```
 $ go test -bench .
 PASS
-BenchmarkRegexp-4            	   10000	    194925 ns/op
-BenchmarkGeneraetd-4         	  200000	      6676 ns/op
-BenchmarkHasPrefixRegexp-4   	   10000	    200552 ns/op
-BenchmarkHasPrefixGeneraetd-4	 1000000	      2347 ns/op
-ok  	github.com/Maki-Daisuke/go-triegun/test	8.525s
+BenchmarkContainsRegexp-4    	   10000	    258149 ns/op
+BenchmarkContainsGeneraetd-4 	  200000	      8276 ns/op
+BenchmarkHasPrefixRegexp-4   	   10000	    247447 ns/op
+BenchmarkHasPrefixGeneraetd-4	 1000000	      3966 ns/op
+BenchmarkIsInRegexp-4        	  200000	      9054 ns/op
+BenchmarkIsInGeneraetd-4     	  500000	      5119 ns/op
+ok  	github.com/Maki-Daisuke/go-triegun/test	16.089s
 ```
 
-29x faster than `regexp`! It can be much faseter in real world program.
+30x faster than `regexp`! It can be much faster in real world program.
 
 You can run the same benchmark test as follows:
 
@@ -81,8 +83,8 @@ Usage:
 Application Options:
   -p, --package=           package name (default: main)
   -t, --tag=               tag name included in the generated functions
+  -C, --disable-contains   Suppress generating code for Contains* functions (default: false)
   -I, --disable-isin       Suppress generating code for IsIn* functions (default: false)
-  -M, --disable-match      Suppress generating code for Match* functions (default: false)
   -P, --disable-hasprefix  Suppress generating code for HasPrefix* functions (default: false)
 
 Help Options:
@@ -102,13 +104,15 @@ Twitterbot
 $ triegun -T Bot signatures.txt > matcher.go
 ```
 
-It generates the following four functions:
+It generates the following six functions:
 
 ```golang
+func ContainsBot(b []byte) bool
+func ContainsBotString(s string) bool
 func HasPrefixBot(b []byte) bool
 func HasPrefixBotString(s string) bool
-func MatchBot(b []byte) bool
-func MatchBotString(s string) bool
+func IsInBot(b []byte) bool
+func IsInBotString(s string) bool
 ```
 
 You can call them as you expect:
@@ -124,11 +128,11 @@ import (
 func main(){
   r := bufio.NewReader(os.Stdin)
   line, err := r.ReadSlice('\n')
-  if MatchBot(line) {
+  if ContainsBot(line) {
     // do something
   }
   // or
-  if MatchBotString(string(line)) {
+  if ContainsBotString(string(line)) {
     // do another thing
   }
 }
@@ -192,11 +196,11 @@ import (
 func main(){
 	r := bufio.NewReader(os.Stdin)
 	line, err := r.ReadSlice('\n')
-	if MatchBot(line) {
+	if ContainsBot(line) {
 		// do something
 	}
 	// or
-	if MatchBotString(string(line)) {
+	if ContainsBotString(string(line)) {
 		// do another thing
 	}
 }

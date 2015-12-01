@@ -5,22 +5,22 @@ import (
 	"text/template"
 )
 
-func (p *Plant) genMatcher(w io.Writer, st *state) error {
+func (p *Plant) genContains(w io.Writer, st *state) error {
 	allowSubmatch(st)
 	states := allStatesUpToGoal(st)
-	return tmplMatcher.Execute(w, map[string]interface{}{
+	return tmplContains.Execute(w, map[string]interface{}{
 		"TagName": p.TagName,
 		"Start":   states[0],
 		"States":  states[1:],
 	})
 }
 
-var tmplMatcher = template.Must(template.New("matcher").Parse(`
-func Match{{ .TagName }}String(str string) bool {
-  return Match{{ .TagName}}(*(*[]byte)(unsafe.Pointer(&str)))
+var tmplContains = template.Must(template.New("contains").Parse(`
+func Contains{{ .TagName }}String(str string) bool {
+  return Contains{{ .TagName}}(*(*[]byte)(unsafe.Pointer(&str)))
 }
 
-func Match{{ .TagName }}(bytes []byte) bool {
+func Contains{{ .TagName }}(bytes []byte) bool {
   defer func(){
     recover() // Must be "index out of range" error for string.
               // Ignore and return false.

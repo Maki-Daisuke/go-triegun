@@ -14,8 +14,8 @@ import (
 var opts struct {
 	PkgName          string `short:"p" long:"package" default:"main" description:"package name"`
 	TagName          string `short:"t" long:"tag" default:"" description:"tag name included in the generated functions"`
+	DisableContains  bool   `short:"C" long:"disable-contains" default:"false" description:"Suppress generating code for Contains* functions"`
 	DisableIsIn      bool   `short:"I" long:"disable-isin" default:"false" description:"Suppress generating code for IsIn* functions"`
-	DisableMatch     bool   `short:"M" long:"disable-match" default:"false" description:"Suppress generating code for Match* functions"`
 	DisableHasPrefix bool   `short:"P" long:"disable-hasprefix" default:"false" description:"Suppress generating code for HasPrefix* functions"`
 }
 
@@ -41,7 +41,7 @@ func main() {
 	t.PkgName = opts.PkgName
 	t.TagName = opts.TagName
 	t.DisableIsIn = opts.DisableIsIn
-	t.DisableMatch = opts.DisableMatch
+	t.DisableContains = opts.DisableContains
 	t.DisableHasPrefix = opts.DisableHasPrefix
 
 	reader := argvreader.NewReader(args)
