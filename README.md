@@ -101,7 +101,7 @@ Baiduspider
 bingbot
 Googlebot
 Twitterbot
-$ triegun -T Bot signatures.txt > matcher.go
+$ triegun -t Bot signatures.txt > matcher.go
 ```
 
 It generates the following six functions:
